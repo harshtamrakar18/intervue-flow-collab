@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Edit, Save, X } from 'lucide-react';
 import { toast } from 'sonner';
+import ReactMarkdown from 'react-markdown';
 
 interface InstructionBoardProps {
   roomId: string;
@@ -92,36 +93,8 @@ Good luck! 🚀`
       ) : (
         <Card className="flex-1 overflow-hidden">
           <CardContent className="h-full p-6 overflow-y-auto">
-            <div className="prose prose-sm max-w-none">
-              {instructions.split('\n').map((line, index) => {
-                if (line.startsWith('# ')) {
-                  return (
-                    <h1 key={index} className="text-2xl font-bold mb-4 text-gray-900">
-                      {line.substring(2)}
-                    </h1>
-                  );
-                } else if (line.startsWith('## ')) {
-                  return (
-                    <h2 key={index} className="text-xl font-semibold mb-3 mt-6 text-gray-800">
-                      {line.substring(3)}
-                    </h2>
-                  );
-                } else if (line.startsWith('- ')) {
-                  return (
-                    <li key={index} className="mb-1 text-gray-700">
-                      {line.substring(2)}
-                    </li>
-                  );
-                } else if (line.trim() === '') {
-                  return <br key={index} />;
-                } else {
-                  return (
-                    <p key={index} className="mb-2 text-gray-700">
-                      {line}
-                    </p>
-                  );
-                }
-              })}
+            <div className="prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
+              <ReactMarkdown>{instructions}</ReactMarkdown>
             </div>
           </CardContent>
         </Card>
