@@ -13,6 +13,7 @@ interface InterviewRoomProps {
     roomId: string;
     passKey: string;
     userName: string;
+    instructions?: string;
   };
   onLeaveRoom: () => void;
 }
@@ -33,7 +34,7 @@ export const InterviewRoom: React.FC<InterviewRoomProps> = ({ roomData, onLeaveR
       id: 'instructions' as ActiveSection,
       name: 'Instructions',
       icon: FileText,
-      component: <InstructionBoard roomId={roomData.roomId} />
+      component: <InstructionBoard roomId={roomData.roomId} initialInstructions={roomData.instructions} />
     },
     {
       id: 'code' as ActiveSection,

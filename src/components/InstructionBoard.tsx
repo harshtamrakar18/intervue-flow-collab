@@ -8,12 +8,13 @@ import { toast } from 'sonner';
 
 interface InstructionBoardProps {
   roomId: string;
+  initialInstructions?: string;
 }
 
-export const InstructionBoard: React.FC<InstructionBoardProps> = ({ roomId }) => {
+export const InstructionBoard: React.FC<InstructionBoardProps> = ({ roomId, initialInstructions }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [instructions, setInstructions] = useState(
-    `# Interview Instructions
+    initialInstructions || `# Interview Instructions
 
 ## Overview
 Welcome to this technical interview session. Please follow these guidelines:

@@ -8,9 +8,10 @@ const Index = () => {
     roomId: string;
     passKey: string;
     userName: string;
+    instructions?: string;
   } | null>(null);
 
-  const handleJoinRoom = (roomData: { roomId: string; passKey: string; userName: string }) => {
+  const handleJoinRoom = (roomData: { roomId: string; passKey: string; userName: string; instructions?: string }) => {
     setCurrentRoom(roomData);
   };
 

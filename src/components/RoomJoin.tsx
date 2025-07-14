@@ -4,18 +4,21 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Users, Lock, User } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Users, Lock, User, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface RoomJoinProps {
-  onJoinRoom: (roomData: { roomId: string; passKey: string; userName: string }) => void;
+  onJoinRoom: (roomData: { roomId: string; passKey: string; userName: string; instructions?: string }) => void;
 }
 
 export const RoomJoin: React.FC<RoomJoinProps> = ({ onJoinRoom }) => {
   const [roomId, setRoomId] = useState('');
   const [passKey, setPassKey] = useState('');
   const [userName, setUserName] = useState('');
+  const [instructions, setInstructions] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +33,12 @@ export const RoomJoin: React.FC<RoomJoinProps> = ({ onJoinRoom }) => {
     // Simulate room validation (in real app, this would be an API call)
     setTimeout(() => {
       toast.success(`Welcome to room ${roomId}, ${userName}!`);
-      onJoinRoom({ roomId: roomId.trim(), passKey: passKey.trim(), userName: userName.trim() });
+      onJoinRoom({ 
+        roomId: roomId.trim(), 
+        passKey: passKey.trim(), 
+        userName: userName.trim(),
+        instructions: instructions.trim() || undefined
+      });
       setIsLoading(false);
     }, 1000);
   };
@@ -41,7 +49,8 @@ export const RoomJoin: React.FC<RoomJoinProps> = ({ onJoinRoom }) => {
     
     setRoomId(newRoomId);
     setPassKey(newPassKey);
-    toast.success('New room created! Share these credentials with participants.');
+    setShowInstructions(true);
+    toast.success('New room created! Add instructions for participants.');
   };
 
   return (
@@ -103,6 +112,22 @@ export const RoomJoin: React.FC<RoomJoinProps> = ({ onJoinRoom }) => {
                 className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
               />
             </div>
+            
+            {showInstructions && (
+              <div className="space-y-2">
+                <Label htmlFor="instructions" className="flex items-center gap-2">
+                  <FileText className="w-4 h-4" />
+                  Interview Instructions
+                </Label>
+                <Textarea
+                  id="instructions"
+                  placeholder="Enter instructions for the interview session..."
+                  value={instructions}
+                  onChange={(e) => setInstructions(e.target.value)}
+                  className="min-h-[100px] transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            )}
             
             <Button 
               type="submit" 
