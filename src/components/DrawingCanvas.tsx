@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Trash2, Download, Undo, Redo, Palette } from 'lucide-react';
+import { Trash2, Download, Undo, Redo, Palette, Eraser } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface DrawingCanvasProps {
@@ -14,6 +14,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ roomId }) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [currentColor, setCurrentColor] = useState('#000000');
   const [brushSize, setBrushSize] = useState(2);
+  const [isErasing, setIsErasing] = useState(false);
 
   const colors = [
     '#000000', '#FF0000', '#00FF00', '#0000FF',
@@ -71,8 +72,14 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ roomId }) => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.strokeStyle = currentColor;
-    ctx.lineWidth = brushSize;
+    if (isErasing) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.lineWidth = brushSize * 2;
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = currentColor;
+      ctx.lineWidth = brushSize;
+    }
     ctx.lineTo(x, y);
     ctx.stroke();
   };
@@ -125,6 +132,15 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ roomId }) => {
             </div>
           </div>
           
+          <Button
+            variant={isErasing ? "default" : "outline"}
+            size="sm"
+            onClick={() => setIsErasing(!isErasing)}
+          >
+            <Eraser className="w-4 h-4 mr-2" />
+            Eraser
+          </Button>
+          
           <div className="flex items-center gap-2">
             <label className="text-sm font-medium">Size:</label>
             <input
@@ -167,7 +183,7 @@ export const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ roomId }) => {
         <CardContent className="flex-1 p-4">
           <canvas
             ref={canvasRef}
-            className="w-full h-full border border-gray-200 rounded cursor-crosshair bg-white"
+            className={`w-full h-full border border-gray-200 rounded bg-white ${isErasing ? 'cursor-pointer' : 'cursor-crosshair'}`}
             onMouseDown={startDrawing}
             onMouseMove={draw}
             onMouseUp={stopDrawing}
