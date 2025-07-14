@@ -1,12 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useState } from 'react';
+import { RoomJoin } from '../components/RoomJoin';
+import { InterviewRoom } from '../components/InterviewRoom';
 
 const Index = () => {
+  const [currentRoom, setCurrentRoom] = useState<{
+    roomId: string;
+    passKey: string;
+    userName: string;
+  } | null>(null);
+
+  const handleJoinRoom = (roomData: { roomId: string; passKey: string; userName: string }) => {
+    setCurrentRoom(roomData);
+  };
+
+  const handleLeaveRoom = () => {
+    setCurrentRoom(null);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {!currentRoom ? (
+        <RoomJoin onJoinRoom={handleJoinRoom} />
+      ) : (
+        <InterviewRoom 
+          roomData={currentRoom} 
+          onLeaveRoom={handleLeaveRoom}
+        />
+      )}
     </div>
   );
 };
